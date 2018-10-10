@@ -18,4 +18,10 @@ class blog(db.Model):
         self.title = title
         self.body = body
 
-class User(db.model):
+@app.route('/')
+def new_post():
+post ='' 
+    if len(post) == 0:
+        return 'Please add a new post'
+    else:
+        return redirect('base.html')
