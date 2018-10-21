@@ -29,8 +29,7 @@ class User(db.Model):
         self.username = username
         self.password = password
 
-    def __repr__(self):
-        return str(self.username)
+  
 
 
 
