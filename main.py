@@ -16,11 +16,11 @@ class Blog(db.Model):
     body = db.Column(db.String(2000))
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-    def __init__(self, name,body, owner, username):
-        self.title = name
+    def __init__(self, title,body, owner):
+        self.title = title
         self.body =body
         self.owner=owner
-        self.username = username
+        
 class User(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     username = db.Column(db.String(20))
@@ -48,7 +48,8 @@ def add_post():
     if request.method == 'POST':
         blog_name = request.form['title']
         blog_body = request.form['body']
-        new_blog = Blog(blog_name,blog_body)
+        owner_id = User.query.filter_by(username=['username']).first()
+        new_blog = Blog(blog_name,blog_body,  owner_id)
         db.session.add(new_blog)
         db.session.commit()
         return redirect('/blog')
@@ -68,26 +69,23 @@ def blog():
 
 @app.route('/login', methods=['POST','GET'])
 def login():
-    username_error=''
-    password_error=''
+    
 
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-
-        if User.query(username=username).first() == None:
-            username_error='Invalid username'
+        user = User.query.filter_by(username=username).first()
         
-            
-        if username and username.password == password:
+        if user and user.password == password:
             session['username'] = username
+            flash('you are log in')
             return redirect('/newpost')
         else:
-             
-            password_error = 'Invalid password'
+             flash ('User password incorrect, or user does not exist')
+       
+    return render_template('login.html')
 
-    return render_template('login.html', password_error=password_error, username_error=username_error)
-
+    
 
 def valid_length(input):
     for i in input:
@@ -122,11 +120,12 @@ def signup():
         return render_template('signup.html')
 
 
-@app.route('/logout',methods=['POST'])
+@app.route('/logout')
 def logout():
-    del session['username']
-    return redirect('/blog')
-
+    if 'username' in session:
+        del session['username']
+    return redirect('/')
+    
 
 
 
