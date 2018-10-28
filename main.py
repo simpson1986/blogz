@@ -109,8 +109,8 @@ def signup():
             return render_template('signup.html', username_error="Duplicate user")
         elif password != verify:
             return render_template('signup.html',password_error="Passwords must match",username=username)
-        elif (len(username) <= 3) or (username.isalpha() == False):
-            return render_template('signup.html', username_error="Username must be longer than 3 characters and cannot contain symbols or numbers")
+        elif (len(username) >= 3):
+            return render_template('signup.html', username_error="Username must be longer than 3 characters ")
         elif not password or not verify:
             return render_template('signup.html',password_error="Passwords cannot be empty",username = username)
         elif not existing_user and password == verify:
