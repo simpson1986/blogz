@@ -31,10 +31,11 @@ class User(db.Model):
         self.username = username
         self.password = password
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
+    blog_post = request.args.get('id')
     users = User.query.order_by(User.id.desc()).all()
-    return render_template('index.html', users = users)
+    return render_template('index.html', users = users, id=blog_post)
 
 
 @app.before_request
@@ -49,7 +50,7 @@ def add_post():
         blog_name = request.form['title']
         blog_body = request.form['body']
         owner_id = User.query.filter_by(username=['username']).first()
-        new_blog = Blog(blog_name,blog_body,  owner_id)
+        new_blog = Blog(blog_name,blog_body, owner_id)
         db.session.add(new_blog)
         db.session.commit()
         return redirect('/blog')

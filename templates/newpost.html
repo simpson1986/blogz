@@ -1,18 +1,26 @@
-{% extends "base.html" %}
-
+<!doctype html> <html>
+	<a href="/">Home</a> <a href="/blog">All Posts</a> <a href="/newpost">New Post</a> <a href="/login">Log in </a> <a href="/logout">Log out</a>
+	
 {% block content %}
-    <h1>Add Blog Post</h1>
+    <h1>Add New Post</h1>
     <form method='post'>
         <label>
-            Title For Your New Blog
-            <br>
-            <input type="text" name='title' required/>
-            <br><br>
-            Your New Blog
-            <br>
-            <textarea name = "body"  required></textarea>
-        </label>
-        <input type="submit" value='Add Post' />
-    </form>
-    <hr />
+            New Post:
+            <input type="text" name='title' />
+		</label>
+		
+		<p><label>
+			Blog Text:
+			<input type="text" name='body'/>
+		</label></p>
+        <input type="submit" value='Add Blog Post' />
+	</form>
+	
+	{% if error %}
+
+		<p>{{error}}</p>
+
+	{% endif %}
+	
 {% endblock %}
+</html>
