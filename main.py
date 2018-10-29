@@ -107,12 +107,12 @@ def signup():
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
             return render_template('signup.html', username_error="Duplicate user")
-        elif password != verify:
-            return render_template('signup.html',password_error="Passwords must match",username=username)
-        elif (len(username) >= 3):
-            return render_template('signup.html', username_error="Username must be longer than 3 characters ")
-        elif not password or not verify:
-            return render_template('signup.html',password_error="Passwords cannot be empty",username = username)
+        elif not match(password,verify):
+            return render_template('signup.html',match_error="Passwords do not match",username=username)
+        elif not valid_length(username):
+            return render_template('signup.html', username_error = "The Username is Invalid")
+        elif not valid_length(password):
+            return render_template('signup.html',Password_len = "Password need be between 3-20 char",username = username)
         elif not existing_user and password == verify:
             new_user = User(username,password)
             db.session.add(new_user)
@@ -121,6 +121,7 @@ def signup():
             return redirect('/newpost')
     if request.method == 'GET':
         return render_template('signup.html')
+
 
 @app.route('/logout')
 def logout():
